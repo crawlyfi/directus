@@ -1,0 +1,21 @@
+SHELL=bash
+
+version=$(shell git describe --tags --abbrev=0)
+tag=latest
+cmd=
+registry=docker.crawlyfi.com
+repository=directus
+
+.PHONY: build-images
+
+build-images:
+
+	docker build \
+		--build-arg VERSION=latest \
+		--build-arg REPOSITORY=direcuts \
+		-t directus:temp \
+		-f ./Dockerfile \
+		..
+
+	docker tag directus:temp docker.crawlyfi.com/directus:latest
+	docker image rm directus:temp
