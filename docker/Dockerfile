@@ -53,6 +53,8 @@ RUN \
     extensions \
     uploads
 
+COPY /api/extensions /directus/extensions
+
 # Expose data directories as volumes
 VOLUME \
   /directus/database \
