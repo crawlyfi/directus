@@ -326,6 +326,7 @@ revision_delta_deleted: Usunięty
 revision_delta_reverted: Odwrócony
 revision_delta_other: Rewizja
 revision_delta_by: '{date} przez {user}'
+download_page_as_csv: 'Pobierz stronę jako CSV'
 private_user: Prywatny Użytkownik
 creation_preview: Podgląd tworzenia
 revision_preview: Podgląd wersji
@@ -556,7 +557,9 @@ errors:
   INVALID_CREDENTIALS: Nieprawidłowa nazwa użytkownika lub hasło
   INVALID_OTP: Złe hasło jednorazowe
   INVALID_PAYLOAD: Błędny payload
+  INVALID_PROVIDER: Użytkownik należy do innego dostawcy autoryzacji
   INVALID_QUERY: Nieprawidłowe zapytanie
+  INVALID_USER: Błąd uwierzytelniania użytkownika
   ITEM_LIMIT_REACHED: Osiągnięto limit przedmiotów
   ITEM_NOT_FOUND: Nie znaleziono elementu
   ROUTE_NOT_FOUND: Nie znaleziono
@@ -1323,7 +1326,6 @@ translation: Tłumaczenia
 translation_placeholder: Wprowadź tłumaczenie...
 value: Wartość
 view_project: Zobacz projekt
-weeks: { }
 report_error: Zgłoś błąd
 start: Rozpocznij
 interfaces:
@@ -1610,7 +1612,7 @@ interfaces:
     header_icon: Ikona nagłówka
     header_color: Kolor nagłówka
     start_open: Rozpocznij rozwinięty
-    start_closed: Rozpocznij zamknięte
+    start_closed: Rozpocznij zwinięty
 displays:
   translations:
     translations: Tłumaczenia
@@ -1822,7 +1824,7 @@ panels:
     show_data_label: Pokaż etykietę danych
     group_by: Pogrupowane według
     group_and_function: Musisz uwzględnić lub pominąć zarówno grupę, jak i funkcję.
-    y_axix_NaN: Oś Y musi być liczbą.
+    y_axis_NaN: Oś Y musi być liczbą.
     y_axis_conditional_one: Wartość warunku
     y_axis_conditional_two: musi być liczbą.
   linechart:
