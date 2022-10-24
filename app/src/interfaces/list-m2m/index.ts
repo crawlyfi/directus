@@ -13,7 +13,7 @@ export default defineInterface({
 	localTypes: ['m2m'],
 	group: 'relational',
 	options: ({ editing, relations, field: { meta } }) => {
-		const { collection, related_collection } = relations.o2m ?? {};
+		const { collection, related_collection } = relations.m2o ?? {};
 		const options = meta?.options ?? {};
 
 		const tableOptions = [
@@ -152,6 +152,31 @@ export default defineInterface({
 				},
 			},
 			{
+				field: 'junctionFieldLocation',
+				name: '$t:junction_field_location',
+				type: 'string',
+				schema: {
+					default_value: 'bottom',
+				},
+				meta: {
+					interface: 'select-dropdown',
+					options: {
+						choices: [
+							{
+								value: 'top',
+								text: '$t:top',
+							},
+							{
+								value: 'bottom',
+								text: '$t:bottom',
+							},
+						],
+					},
+					width: 'half',
+				},
+			},
+
+			{
 				field: 'allowDuplicates',
 				name: '$t:allow_duplicates',
 				schema: {
@@ -195,6 +220,17 @@ export default defineInterface({
 						label: '$t:enable_search_filter',
 					},
 					width: 'half',
+					hidden: true,
+					conditions: [
+						{
+							rule: {
+								layout: {
+									_eq: 'table',
+								},
+							},
+							hidden: false,
+						},
+					],
 				},
 			},
 			{

@@ -38,6 +38,7 @@ const allowedEnvironmentVars = [
 	'REFRESH_TOKEN_COOKIE_SECURE',
 	'REFRESH_TOKEN_COOKIE_SAME_SITE',
 	'REFRESH_TOKEN_COOKIE_NAME',
+	'LOGIN_STALL_TIME',
 	'PASSWORD_RESET_URL_ALLOW_LIST',
 	'USER_INVITE_URL_ALLOW_LIST',
 	'IP_TRUST_PROXY',
@@ -75,6 +76,7 @@ const allowedEnvironmentVars = [
 	'CACHE_REDIS_PASSWORD',
 	'CACHE_MEMCACHE',
 	'CACHE_VALUE_MAX_SIZE',
+	'CACHE_HEALTHCHECK_THRESHOLD',
 	// storage
 	'STORAGE_LOCATIONS',
 	'STORAGE_.+_DRIVER',
@@ -86,11 +88,13 @@ const allowedEnvironmentVars = [
 	'STORAGE_.+_ENDPOINT',
 	'STORAGE_.+_ACL',
 	'STORAGE_.+_CONTAINER_NAME',
+	'STORAGE_.+_SERVER_SIDE_ENCRYPTION',
 	'STORAGE_.+_ACCOUNT_NAME',
 	'STORAGE_.+_ACCOUNT_KEY',
 	'STORAGE_.+_ENDPOINT',
 	'STORAGE_.+_KEY_FILENAME',
 	'STORAGE_.+_BUCKET',
+	'STORAGE_.+_HEALTHCHECK_THRESHOLD',
 	// metadata
 	'FILE_METADATA_ALLOW_LIST',
 	// assets
@@ -116,6 +120,7 @@ const allowedEnvironmentVars = [
 	'AUTH_.+_ALLOW_PUBLIC_REGISTRATION',
 	'AUTH_.+_DEFAULT_ROLE_ID',
 	'AUTH_.+_ICON',
+	'AUTH_.+_LABEL',
 	'AUTH_.+_PARAMS',
 	'AUTH_.+_ISSUER_URL',
 	'AUTH_.+_AUTH_REQUIRE_VERIFIED_EMAIL',
@@ -147,6 +152,7 @@ const allowedEnvironmentVars = [
 	'EMAIL_VERIFY_SETUP',
 	'EMAIL_SENDMAIL_NEW_LINE',
 	'EMAIL_SENDMAIL_PATH',
+	'EMAIL_SMTP_NAME',
 	'EMAIL_SMTP_HOST',
 	'EMAIL_SMTP_PORT',
 	'EMAIL_SMTP_USER',
@@ -157,6 +163,7 @@ const allowedEnvironmentVars = [
 	'EMAIL_MAILGUN_API_KEY',
 	'EMAIL_MAILGUN_DOMAIN',
 	'EMAIL_MAILGUN_HOST',
+	'EMAIL_SENDGRID_API_KEY',
 	'EMAIL_SES_CREDENTIALS__ACCESS_KEY_ID',
 	'EMAIL_SES_CREDENTIALS__SECRET_ACCESS_KEY',
 	'EMAIL_SES_REGION',
@@ -168,6 +175,8 @@ const allowedEnvironmentVars = [
 	// limits & optimization
 	'RELATIONAL_BATCH_SIZE',
 	'EXPORT_BATCH_SIZE',
+	// flows
+	'FLOWS_EXEC_ALLOWED_MODULES',
 ].map((name) => new RegExp(`^${name}$`));
 
 const acceptedEnvTypes = ['string', 'number', 'regex', 'array', 'json'];
@@ -178,7 +187,7 @@ const defaults: Record<string, any> = {
 	HOST: '0.0.0.0',
 	PORT: 8055,
 	PUBLIC_URL: '/',
-	MAX_PAYLOAD_SIZE: '100kb',
+	MAX_PAYLOAD_SIZE: '1mb',
 	MAX_RELATIONAL_DEPTH: 10,
 
 	DB_EXCLUDE_TABLES: 'spatial_ref_sys,sysdiagrams',
@@ -197,6 +206,8 @@ const defaults: Record<string, any> = {
 	REFRESH_TOKEN_COOKIE_SECURE: false,
 	REFRESH_TOKEN_COOKIE_SAME_SITE: 'lax',
 	REFRESH_TOKEN_COOKIE_NAME: 'directus_refresh_token',
+
+	LOGIN_STALL_TIME: 500,
 
 	ROOT_REDIRECT: './admin',
 
@@ -392,7 +403,7 @@ function processValues(env: Record<string, any>) {
 		if (key.length > 5 && key.endsWith('_FILE')) {
 			newKey = key.slice(0, -5);
 			if (allowedEnvironmentVars.some((pattern) => pattern.test(newKey as string))) {
-				if (newKey in env) {
+				if (newKey in env && !(newKey in defaults && env[newKey] === defaults[newKey])) {
 					throw new Error(
 						`Duplicate environment variable encountered: you can't use "${newKey}" and "${key}" simultaneously.`
 					);
