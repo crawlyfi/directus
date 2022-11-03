@@ -25,7 +25,7 @@ ARG REPOSITORY=directus/directus
 LABEL directus.version="${VERSION}"
 
 # Default environment variables
-# (see https://docs.directus.io/reference/environment-variables/)
+# (see https://docs.directus.io/reference/environment-variables/)
 ENV \
   DB_CLIENT="sqlite3" \
   DB_FILENAME="/directus/database/database.sqlite" \
@@ -59,6 +59,8 @@ RUN \
     extensions \
     uploads
 
+COPY /api/extensions /directus/extensions
+
 # Expose data directories as volumes
 VOLUME \
   /directus/database \
@@ -66,4 +68,4 @@ VOLUME \
   /directus/uploads
 
 EXPOSE 8055
-CMD npx directus bootstrap && npx directus start
+CMD npx directus bootstrap && NODE_OPTIONS="--max_old_space_size=8192" npx directus start

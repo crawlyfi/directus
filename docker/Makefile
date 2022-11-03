@@ -10,8 +10,6 @@ repository=directus/directus
 .PHONY: build-images
 
 build-images:
-	npm run build
-	npm run pack
 	docker build \
 		--build-arg VERSION=$(version) \
 		--build-arg REPOSITORY=$(repository) \
