@@ -113,7 +113,7 @@ export class AssetsService {
 
 			const assetFilename =
 				path.basename(file.filename_disk, path.extname(file.filename_disk)) +
-				getAssetSuffix(transforms) +
+				getAssetSuffix(transformation.key) +
 				(maybeNewFormat ? `.${maybeNewFormat}` : path.extname(file.filename_disk));
 
 			const { exists } = await storage.disk(file.storage).exists(assetFilename);
@@ -178,7 +178,7 @@ export class AssetsService {
 	}
 }
 
-const getAssetSuffix = (transforms: Transformation[]) => {
-	if (Object.keys(transforms).length === 0) return '';
-	return `__${hash(transforms)}`;
+const getAssetSuffix = (transforms: string | undefined) => {
+	if (!transforms) return '';
+	return `__${transforms}`;
 };
