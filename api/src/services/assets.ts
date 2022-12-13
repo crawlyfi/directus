@@ -113,10 +113,11 @@ export class AssetsService {
 
 			const assetFilename =
 				path.basename(file.filename_disk, path.extname(file.filename_disk)) +
-				getAssetSuffix(transforms) +
+				getAssetSuffix(transformation.key) +
 				(maybeNewFormat ? `.${maybeNewFormat}` : path.extname(file.filename_disk));
 
-			const { exists } = await storage.disk(file.storage).exists(assetFilename);
+			// const { exists } = await storage.disk(file.storage).exists(assetFilename);
+			const exists = false
 
 			if (maybeNewFormat) {
 				file.type = contentType(assetFilename) || null;
@@ -156,6 +157,9 @@ export class AssetsService {
 				if (transforms.find((transform) => transform[0] === 'rotate') === undefined) transformer.rotate();
 
 				transforms.forEach(([method, ...args]) => (transformer[method] as any).apply(transformer, args));
+				// delete from transfroms objects with resize
+				// transforms.shift()
+
 
 				readStream.on('error', (e) => {
 					logger.error(e, `Couldn't transform file ${file.id}`);
@@ -178,7 +182,7 @@ export class AssetsService {
 	}
 }
 
-const getAssetSuffix = (transforms: Transformation[]) => {
-	if (Object.keys(transforms).length === 0) return '';
-	return `__${hash(transforms)}`;
+const getAssetSuffix = (transforms: string | undefined) => {
+	if (!transforms) return '';
+	return `__${transforms}`;
 };
